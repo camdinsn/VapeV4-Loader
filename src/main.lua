@@ -21,6 +21,12 @@ local cloneref = cloneref or function(obj)
 end
 local playersService = cloneref(game:GetService('Players'))
 
+local function encodePath(path)
+	path = path:gsub('%%', '%%25')
+	path = path:gsub(' ', '%%20')
+	return path
+end
+
 local function repoPath(path)
 	local rel = path:gsub('^newvape/', '')
 	if rel == 'main.lua' then
@@ -46,7 +52,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..repoPath(path), true)
+			return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..encodePath(repoPath(path)), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
@@ -78,7 +84,7 @@ local function finishLoading()
 				if shared.VapeDeveloper then
 					loadstring(readfile('newvape/loader.lua'), 'loader')()
 				else
-					loadstring(game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/src/loader.lua', true), 'loader')()
+					loadstring(game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..encodePath('src/loader.lua'), true), 'loader')()
 				end
 			]]
 			if shared.VapeDeveloper then
@@ -118,7 +124,7 @@ if not shared.VapeIndependent then
 	else
 		if not shared.VapeDeveloper then
 			local suc, res = pcall(function()
-				return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/games/'..game.PlaceId..'.lua', true)
+				return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..encodePath('games/'..game.PlaceId..'.lua'), true)
 			end)
 			if suc and res ~= '404: Not Found' then
 				loadstring(downloadFile('newvape/games/'..game.PlaceId..'.lua'), tostring(game.PlaceId))(...)

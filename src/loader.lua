@@ -8,6 +8,12 @@ local delfile = delfile or function(file)
 	writefile(file, '')
 end
 
+local function encodePath(path)
+	path = path:gsub('%%', '%%25')
+	path = path:gsub(' ', '%%20')
+	return path
+end
+
 local function repoPath(path)
 	local rel = path:gsub('^newvape/', '')
 	if rel == 'main.lua' then
@@ -33,7 +39,7 @@ end
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..repoPath(path), true)
+			return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..encodePath(repoPath(path)), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
