@@ -8,10 +8,32 @@ local delfile = delfile or function(file)
 	writefile(file, '')
 end
 
+local function repoPath(path)
+	local rel = path:gsub('^newvape/', '')
+	if rel == 'main.lua' then
+		return 'src/main.lua'
+	elseif rel == 'loader.lua' then
+		return 'src/loader.lua'
+	elseif rel == 'games/universal.lua' then
+		return 'src/games/universal - base/base.lua'
+	elseif rel == 'guis/new.lua' then
+		return 'src/guis/new/gui.lua'
+	elseif rel == 'guis/old.lua' then
+		return 'src/guis/old/gui.lua'
+	elseif rel == 'guis/rise.lua' then
+		return 'src/guis/rise/gui.lua'
+	elseif rel == 'guis/liquidbounce.lua' then
+		return 'src/guis/liquidbounce/gui.lua'
+	elseif rel == 'guis/wurst.lua' then
+		return 'src/guis/wurst/gui.lua'
+	end
+	return rel
+end
+
 local function downloadFile(path, func)
 	if not isfile(path) then
 		local suc, res = pcall(function()
-			return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..select(1, path:gsub('newvape/', '')), true)
+			return game:HttpGet('https://raw.githubusercontent.com/camdinsn/VapeV4-Loader/'..readfile('newvape/profiles/commit.txt')..'/'..repoPath(path), true)
 		end)
 		if not suc or res == '404: Not Found' then
 			error(res)
